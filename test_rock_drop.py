@@ -22,20 +22,26 @@ class Case(unittest.TestCase):
                 output += line
         return output
 
-    def test_1x1_empty(self):
-        test_input = self.read_test_input('1x1_empty_in')
-        test_output = self.read_test_output('1x1_empty_out')
-        simulated = self.simulator.simulate(test_input)
-        self.assertEqual(self.writer.write(simulated), test_output)
-
     def test_1x2_singlerock(self):
         test_input = self.read_test_input('1x2_singlerock_in')
         test_output = self.read_test_output('1x2_singlerock_out')
         simulated = self.simulator.simulate(test_input)
         self.assertEqual(self.writer.write(simulated), test_output)
 
+    def test_1x8_severalsingles(self):
+        test_input = self.read_test_input('1x8_severalsingles_in')
+        test_output = self.read_test_output('1x8_severalsingles_out')
+        simulated = self.simulator.simulate(test_input)
+        self.assertEqual(self.writer.write(simulated), test_output)
+
     def test_2x2_twotypes(self):
         test_input = self.read_test_input('2x2_twotypes_in')
         test_output = self.read_test_output('2x2_twotypes_out')
+        simulated = self.simulator.simulate(test_input)
+        self.assertEqual(self.writer.write(simulated), test_output)
+
+    def test_2x3_singles(self):
+        test_input = self.read_test_input('2x3_singles_in')
+        test_output = self.read_test_output('2x3_singles_out')
         simulated = self.simulator.simulate(test_input)
         self.assertEqual(self.writer.write(simulated), test_output)
