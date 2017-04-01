@@ -25,6 +25,11 @@ test results display)
 
 ## Implementation notes
 
+0. The nature of the problem practically insists on multi-threading the gravity
+   simulation, since "columns" in the particle field are independent. If I were
+   to spend more time on it, that's one thing I'd improve. You could use timeit
+   or a timing decorator to measure if there was a performance improvement.
+
 1. I considered mocking or monkey-patching STDIN for the unit testing, but it
    was an unproductive rabbit hole. I settled on a couple methods in the test
    file that read from a file and output to the appropriate data type instead.
@@ -36,4 +41,7 @@ test results display)
    numpy.transpose(), but I'd already gone down the route of implementing it
    myself by the time I thought of googling for it. Woops. :-D
 
-
+3. From my C# days, I thought that the object classes should inherit from an
+   abstract base class Thing, which would enforce the implmentation of its
+   properties. But, 1) it's unclear how Pythonic this is, and 2) it would break
+   Python 2.x compatibility so I left it alone.

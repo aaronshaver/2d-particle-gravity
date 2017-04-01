@@ -16,6 +16,20 @@ class Reader():
         return field
 
 
+class SingleRock():
+    def __init__(self):
+        self.can_fall = True
+        self.accepts_rocks = True
+
+    def __str__(self):
+        return '.'
+
+class EmptySpace():
+    def __init__(self):
+        self.can_fall = False
+        self.accepts_rocks = True
+
+
 class Column():
     """ Can apply gravity to a single 'column' in the particle field """
     def __init__(self, height):
@@ -47,13 +61,18 @@ class Column():
 class Simulator():
     """ Applies gravity to the particle field """
     def simulate(self, input_field):
+        def initialize_columns():
+            columns = []
+            for i in range(width):
+                columns.append(Column(height))
+            return columns
+
         dimensions = input_field[0].split()
         width = int(dimensions[0])
         height = int(dimensions[1])
         del input_field[0]
-        columns = []
-        for i in range(width):
-            columns.append(Column(height))
+
+        columns = initialize_columns()
         for i in range(width):
             for j in range(height):
                columns[i].cells.append(input_field[j][i])
