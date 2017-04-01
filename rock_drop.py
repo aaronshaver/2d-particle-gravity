@@ -29,6 +29,12 @@ class EmptySpace():
         self.can_fall = False
         self.accepts_rocks = True
 
+    def __str__(self):
+        return ' '
+
+
+class NoSuchParticle(Exception):
+    pass
 
 class Column():
     """ Can apply gravity to a single 'column' in the particle field """
@@ -40,9 +46,9 @@ class Column():
         column = self.cells
         while self.undropped_exist():
             for position, obj in enumerate(column):
-                if obj == '.':
+                if obj.can_fall:
                     if position + 1 < self.height:
-                        if column[position + 1] == ' ':
+                        if column[position + 1].accepts_rocks:
                             accepts_rocks = column[position + 1]
                             rock_to_move = column[position]
                             column[position + 1] = rock_to_move
@@ -52,30 +58,44 @@ class Column():
         """ checks column for any rocks that haven't fully fallen """
         column = self.cells
         for position, obj in enumerate(column):
-            if position + 1 < len(column):
-                if obj == '.':
-                    if column[position + 1] == ' ':
+            below = position + 1
+            if below < len(column):
+                if obj.can_fall:
+                    if column[below].accepts_rocks:
                         return True
         return False
+
+
+
 
 class Simulator():
     """ Applies gravity to the particle field """
     def simulate(self, input_field):
-        def initialize_columns():
+        def _initialize_columns():
             columns = []
-            for i in range(width):
+            for _ in range(width):
                 columns.append(Column(height))
             return columns
+
+        def _convert_to_object(raw_object):
+            if raw_object == '.':
+                return SingleRock()
+            elif raw_object == ' ':
+                return EmptySpace()
+            else:
+                raise NoSuchParticle("Unexpected particle character in input")
 
         dimensions = input_field[0].split()
         width = int(dimensions[0])
         height = int(dimensions[1])
         del input_field[0]
 
-        columns = initialize_columns()
+        columns = _initialize_columns()
         for i in range(width):
             for j in range(height):
-               columns[i].cells.append(input_field[j][i])
+                raw_obj = input_field[j][i]
+                obj = _convert_to_object(raw_obj)
+                columns[i].cells.append(obj)
         for column in columns:
             column.apply_gravity()
         return columns
@@ -91,7 +111,9 @@ class Writer():
                 rows[row][col] = field[col].cells[row]
         output = ""
         for row in rows:
-            output += "".join(row) + '\n'
+            for obj in row:
+                output += str(obj)
+            output += '\n'
         sys.stdout.write(output)
         return output
 

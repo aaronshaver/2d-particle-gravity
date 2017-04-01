@@ -37,9 +37,11 @@ test results display)
    less hacky than some of the really strange ways of redirecting STDIN/STDOUT.
 
 2. For transposing the 2D particle field (making the vertical "columns" in the
-   simulator become "rows" for the writer), I probably should have used
+   simulator become "rows" for the writer -- and the reverse situation for
+   input), I probably should have used
    numpy.transpose(), but I'd already gone down the route of implementing it
-   myself by the time I thought of googling for it. Woops. :-D
+   myself by the time I thought of googling for it. Woops. :-D The one good
+   thing to come out of it is that this reduces dependencies.
 
 3. From my C# days, I thought that the object classes should inherit from an
    abstract base class Thing, which would enforce the implmentation of its

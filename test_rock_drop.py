@@ -24,6 +24,10 @@ class Case(unittest.TestCase):
                 output += line
         return output
 
+    def test_bad_chars_input(self):
+        test_input = self.read_test_input('bad_particle_chars')
+        self.assertRaises(rock_drop.NoSuchParticle, self.simulator.simulate, test_input)
+
     def test_1x2_singlerock(self):
         test_input = self.read_test_input('1x2_singlerock')
         test_output = self.read_test_output('1x2_singlerock')
