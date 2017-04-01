@@ -1,5 +1,6 @@
 import fileinput
 import sys
+import pdb
 
 
 class Reader():
@@ -13,56 +14,48 @@ class Reader():
 
 
 class Simulator():
+
+    def undropped_exist(self, column):
+        for position, obj in enumerate(column):
+            if position + 1 < len(column):
+                if obj == '.':
+                    if column[position + 1] == ' ':
+                        return True
+        return False
+
     def simulate(self, input_field):
-        print("field at beginning of simulator", input_field)
         dimensions = input_field[0].split()
         width = int(dimensions[0])
         height = int(dimensions[1])
         del input_field[0]
-        print("input_field truncated", input_field)
-        print("width, height", width, height)
-        out = [['' for x in range(width)] for y in range(height)]
+        out = [['' for x in range(height)] for y in range(width)]
         for i, row in enumerate(input_field):
             for j, col in enumerate(row):
-                out[i][j] = col
-        print("fields before gravity", out)
-        for position, obj in enumerate(out):
-            print("position, obj", position, obj)
-            if obj[0] == '.':
-                print("match")
-                print("position, +1", position, position + 1, height)
-                if position + 1 < height:
-                    if out[position + 1][0] == ' ':
-                        print("yep, empty")
-                        print("out before swap", out)
-                        accepts_rocks = out[position + 1]
-                        rock_to_move = out[position]
-                        out[position + 1] = rock_to_move
-                        out[position] = [' ']
-                        print("out after swap", out)
-        print("field at end of Simulator", out)
+                out[j][i] = col
+        for column in out:
+            while self.undropped_exist(column):
+                for position, obj in enumerate(column):
+                    if column[position] == '.':
+                        if position + 1 < height:
+                            if column[position + 1] == ' ':
+                                accepts_rocks = column[position + 1]
+                                rock_to_move = column[position]
+                                column[position + 1] = rock_to_move
+                                column[position] = ' '
         return out
 
 class Writer():
     def write(self, field):
-        print("field coming into Writer ", field)
+        width = len(field[0])
         height = len(field)
-        rows = [[] for x in range(height)]
-        print("ROWS", rows)
-        for i, row in enumerate(field):
-            rows[i].extend(row)
+        rows = [[[] for x in range(height)] for y in range(width)]
+        for col in range(height):
+            for row in range(width):
+               rows[row][col] = field[col][row] 
         output = ""
-        print("rows after de-rowizing", rows)
-        for line in rows:
-            print("doing a line...")
-            print("line|" + str(line) + "|")
-            for char in line:
-                print("doing a char...")
-                output += char
-            output += '\n'
-        print("//")
+        for row in rows:
+            output += "".join(row) + '\n'
         sys.stdout.write(output)
-        print("//")
         return output
 
 def main():

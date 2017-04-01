@@ -27,6 +27,11 @@ test results display)
    was an unproductive rabbit hole. I settled on a couple methods in the test
    file that read from a file and output to the appropriate data type instead.
    It's a little duplicative of what's going on in the main program, but felt
-   less hacky than some of the really strange ways of redirecting STDIN.
+   less hacky than some of the really strange ways of redirecting STDIN/STDOUT.
+
+2. For transposing the 2D particle field (making the vertical "columns" in the
+   simulator become "rows" for the writer), I probably should have used
+   numpy.transpose(), but I'd already gone down the route of implementing it
+   myself by the time I thought of googling for it. Woops. :-D
 
 
