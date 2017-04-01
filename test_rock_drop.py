@@ -24,9 +24,21 @@ class Case(unittest.TestCase):
                 output += line
         return output
 
-    def test_bad_chars_input(self):
+    def test_bad_height(self):
+        test_input = self.read_test_input('bad_height')
+        self.assertRaises(rock_drop.BadInputFile, self.reader.validate, test_input)
+
+    def test_bad_width(self):
+        test_input = self.read_test_input('bad_width')
+        self.assertRaises(rock_drop.BadInputFile, self.reader.validate, test_input)
+
+    def test_bad_header(self):
+        test_input = self.read_test_input('bad_header')
+        self.assertRaises(rock_drop.BadInputFile, self.reader.validate, test_input)
+
+    def test_bad_particle_chars(self):
         test_input = self.read_test_input('bad_particle_chars')
-        self.assertRaises(rock_drop.NoSuchParticle, self.simulator.simulate, test_input)
+        self.assertRaises(rock_drop.BadInputFile, self.simulator.simulate, test_input)
 
     def test_1x2_singlerock(self):
         test_input = self.read_test_input('1x2_singlerock')

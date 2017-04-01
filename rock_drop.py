@@ -13,7 +13,26 @@ class Reader():
         for line in data:
             field.append(line.strip('\n'))
         data.close()
+        self.validate(field)
         return field
+
+    @staticmethod
+    def validate(field):
+        """ validates raw user input against problem domain requirements """
+        header = field[0]
+        if len(header) is not 3 or not any(char.isdigit() for char in header):
+            raise BadInputFile("Bad field header; format is <w><space><h>")
+        width, height = (int(x) for x in field[0].split(' '))
+        del field[0]
+        for line in field:
+            if len(line) != width:
+                raise BadInputFile("Bad field body; a line length was wrong")
+        if len(field) != height:
+            raise BadInputFile("Bad field body; field height was wrong")
+
+
+class BadInputFile(Exception):
+    pass
 
 
 class SingleRock():
@@ -24,6 +43,7 @@ class SingleRock():
     def __str__(self):
         return '.'
 
+
 class EmptySpace():
     def __init__(self):
         self.can_fall = False
@@ -33,8 +53,7 @@ class EmptySpace():
         return ' '
 
 
-class NoSuchParticle(Exception):
-    pass
+
 
 class Column():
     """ Can apply gravity to a single 'column' in the particle field """
@@ -47,11 +66,12 @@ class Column():
         while self.undropped_exist():
             for position, obj in enumerate(column):
                 if obj.can_fall:
-                    if position + 1 < self.height:
-                        if column[position + 1].accepts_rocks:
-                            accepts_rocks = column[position + 1]
+                    below = position + 1
+                    if below < self.height:
+                        if column[below].accepts_rocks:
+                            accepts_rocks = column[below]
                             rock_to_move = column[position]
-                            column[position + 1] = rock_to_move
+                            column[below] = rock_to_move
                             column[position] = accepts_rocks
 
     def undropped_exist(self):
@@ -59,13 +79,11 @@ class Column():
         column = self.cells
         for position, obj in enumerate(column):
             below = position + 1
-            if below < len(column):
+            if below < self.height:
                 if obj.can_fall:
                     if column[below].accepts_rocks:
                         return True
         return False
-
-
 
 
 class Simulator():
@@ -83,7 +101,7 @@ class Simulator():
             elif raw_object == ' ':
                 return EmptySpace()
             else:
-                raise NoSuchParticle("Unexpected particle character in input")
+                raise BadInputFile("Unexpected particle character in input")
 
         dimensions = input_field[0].split()
         width = int(dimensions[0])
