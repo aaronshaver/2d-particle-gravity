@@ -1,6 +1,4 @@
-# particle-simulation (not done yet)
-
-Code's pretty gross right now. Need to implement some OO design, refactor, etc.
+# rock_drop (not done yet!!!!!)
 
 ## Usage
 
