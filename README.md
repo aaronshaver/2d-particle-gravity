@@ -1,4 +1,4 @@
-# rock_drop (not done yet!!!!!)
+# rock_drop
 
 ## Usage
 
@@ -53,3 +53,6 @@ test results display)
    for optimization (by ignoring everything underneath a table). I chose to
    make the input maximally flexible, but if this were a work assignment, I'd
    push for clarity in what the client wants/needs.
+
+5. There's more opportunities for refactoring, like the heavily nested
+   apply_gravity() method, but I'm gonna call it good.
