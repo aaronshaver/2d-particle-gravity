@@ -71,3 +71,9 @@ class Case(unittest.TestCase):
         test_output = self.read_test_output('4x3_singles')
         simulated = self.simulator.simulate(test_input)
         self.assertEqual(self.writer.write(simulated), test_output)
+
+    def test_4x4_tables_singles(self):
+        test_input = self.read_test_input('4x4_tables_singles')
+        test_output = self.read_test_output('4x4_tables_singles')
+        simulated = self.simulator.simulate(test_input)
+        self.assertEqual(self.writer.write(simulated), test_output)

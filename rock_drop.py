@@ -17,8 +17,9 @@ class Reader():
         return field
 
     @staticmethod
-    def validate(field):
+    def validate(input_field):
         """ validates raw user input against problem domain requirements """
+        field = input_field[:]  # make a copy
         header = field[0]
         if len(header) is not 3 or not any(char.isdigit() for char in header):
             raise BadInputFile("Bad field header; format is <w><space><h>")
@@ -53,6 +54,13 @@ class EmptySpace():
         return ' '
 
 
+class Table():
+    def __init__(self):
+        self.can_fall = False
+        self.accepts_rocks = False
+
+    def __str__(self):
+        return 'T'
 
 
 class Column():
@@ -100,6 +108,8 @@ class Simulator():
                 return SingleRock()
             elif raw_object == ' ':
                 return EmptySpace()
+            elif raw_object == 'T':
+                return Table()
             else:
                 raise BadInputFile("Unexpected particle character in input")
 
