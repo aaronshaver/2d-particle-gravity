@@ -63,6 +63,15 @@ class Table():
         return 'T'
 
 
+class DoubleRock():
+    def __init__(self):
+        self.can_fall = True
+        self.accepts_rocks = False
+
+    def __str__(self):
+        return ':'
+
+
 class Column():
     """ Can apply gravity to a single 'column' in the particle field """
     def __init__(self, height):
@@ -75,12 +84,22 @@ class Column():
             for position, obj in enumerate(column):
                 if obj.can_fall:
                     below = position + 1
-                    if below < self.height:
-                        if column[below].accepts_rocks:
-                            accepts_rocks = column[below]
-                            rock_to_move = column[position]
-                            column[below] = rock_to_move
-                            column[position] = accepts_rocks
+                    if below < self.height and column[below].accepts_rocks:
+                        to_space = column[below]
+                        from_space = column[position]
+                        if isinstance(to_space, EmptySpace):
+                            column[below] = from_space
+                            column[position] = EmptySpace()
+                        elif isinstance(to_space, SingleRock):
+                            if isinstance(from_space, DoubleRock):
+                                column[below] = DoubleRock()
+                                column[position] = SingleRock()
+                            elif isinstance(from_space, SingleRock):
+                                column[below] = DoubleRock()
+                                column[position] = EmptySpace()
+                        else:
+                            raise("Unexpected particle type below object")
+
 
     def undropped_exist(self):
         """ checks column for any rocks that haven't fully fallen """
@@ -110,6 +129,8 @@ class Simulator():
                 return EmptySpace()
             elif raw_object == 'T':
                 return Table()
+            elif raw_object == ':':
+                return DoubleRock()
             else:
                 raise BadInputFile("Unexpected particle character in input")
 

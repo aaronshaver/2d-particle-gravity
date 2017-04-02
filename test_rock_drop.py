@@ -46,14 +46,12 @@ class Case(unittest.TestCase):
         simulated = self.simulator.simulate(test_input)
         self.assertEqual(self.writer.write(simulated), test_output)
 
-    @unittest.skip("haven't implemented double rock stacking yet")
     def test_1x8_severalsingles(self):
         test_input = self.read_test_input('1x8_severalsingles')
         test_output = self.read_test_output('1x8_severalsingles')
         simulated = self.simulator.simulate(test_input)
         self.assertEqual(self.writer.write(simulated), test_output)
 
-    @unittest.skip("haven't implmented double rocks yet")
     def test_2x2_twotypes(self):
         test_input = self.read_test_input('2x2_twotypes')
         test_output = self.read_test_output('2x2_twotypes')

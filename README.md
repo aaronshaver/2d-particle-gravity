@@ -6,11 +6,11 @@
 
 You can either put a file path on the commandline as an argument:
 
-    python rock_drop.py data/1x1_empty_in.txt 
+    python rock_drop.py data/3x7_your_file_in.txt 
 
 Or pipe input:
 
-    cat data/1x1_empty_in.txt | python rock_drop.py
+    cat data/3x7_your_file_in.txt | python rock_drop.py
 
 ### Run the tests
 
