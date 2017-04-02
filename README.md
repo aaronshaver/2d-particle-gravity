@@ -12,6 +12,8 @@ Or pipe input:
 
     cat data/3x7_your_file_in.txt | python rock_drop.py
 
+It works in Python 2.7.12+ and 3.5.2+.
+
 ### Run the tests
 
 Inside the directory holding the .py files:
@@ -45,3 +47,9 @@ test results display)
    abstract base class Thing, which would enforce the implmentation of its
    properties. But, 1) it's unclear how Pythonic this is, and 2) it would break
    Python 2.x compatibility so I left it alone.
+
+4. It wasn't perfectly clear from the problem description whether rocks could
+   start out underneath tables. If they can't, there might be an opportunity
+   for optimization (by ignoring everything underneath a table). I chose to
+   make the input maximally flexible, but if this were a work assignment, I'd
+   push for clarity in what the client wants/needs.

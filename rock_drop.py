@@ -1,7 +1,6 @@
 """ rock_drop: simulates gravity for falling rocks in a particle field """
 import fileinput
 import sys
-import pdb
 
 
 class Reader():
@@ -21,7 +20,7 @@ class Reader():
         """ validates raw user input against problem domain requirements """
         field = input_field[:]  # make a copy
         header = field[0]
-        if len(header) is not 3 or not any(char.isdigit() for char in header):
+        if len(header) < 3 or not any(char.isdigit() for char in header):
             raise BadInputFile("Bad field header; format is <w><space><h>")
         width, height = (int(x) for x in field[0].split(' '))
         del field[0]
@@ -33,10 +32,12 @@ class Reader():
 
 
 class BadInputFile(Exception):
+    """ custom error for when user's input didn't follow the spec """
     pass
 
 
 class SingleRock():
+    """ fallable object that can also accept fallable objects """
     def __init__(self):
         self.can_fall = True
         self.accepts_rocks = True
@@ -46,6 +47,7 @@ class SingleRock():
 
 
 class EmptySpace():
+    """ non-fallable object that can accept fallables """
     def __init__(self):
         self.can_fall = False
         self.accepts_rocks = True
@@ -55,6 +57,7 @@ class EmptySpace():
 
 
 class Table():
+    """ non-fallable object that cannot accept fallable objects """
     def __init__(self):
         self.can_fall = False
         self.accepts_rocks = False
@@ -64,6 +67,7 @@ class Table():
 
 
 class DoubleRock():
+    """ fallable object that cannot accept fallable objects """
     def __init__(self):
         self.can_fall = True
         self.accepts_rocks = False
@@ -79,29 +83,30 @@ class Column():
         self.height = height
 
     def apply_gravity(self):
+        """ the 'core' of the program: applies the physics rules to a vertical
+        column of space/objects """
         column = self.cells
-        while self.undropped_exist():
+        while self._undropped_exist():
             for position, obj in enumerate(column):
-                if obj.can_fall:
-                    below = position + 1
-                    if below < self.height and column[below].accepts_rocks:
-                        to_space = column[below]
-                        from_space = column[position]
-                        if isinstance(to_space, EmptySpace):
-                            column[below] = from_space
+                below = position + 1
+                if obj.can_fall and below < self.height and column[below].accepts_rocks:
+                    to_space = column[below]
+                    from_space = column[position]
+                    if isinstance(to_space, EmptySpace):
+                        column[below] = from_space
+                        column[position] = EmptySpace()
+                    elif isinstance(to_space, SingleRock):
+                        if isinstance(from_space, DoubleRock):
+                            column[below] = DoubleRock()
+                            column[position] = SingleRock()
+                        elif isinstance(from_space, SingleRock):
+                            column[below] = DoubleRock()
                             column[position] = EmptySpace()
-                        elif isinstance(to_space, SingleRock):
-                            if isinstance(from_space, DoubleRock):
-                                column[below] = DoubleRock()
-                                column[position] = SingleRock()
-                            elif isinstance(from_space, SingleRock):
-                                column[below] = DoubleRock()
-                                column[position] = EmptySpace()
-                        else:
-                            raise("Unexpected particle type below object")
+                    else:
+                        raise "Unexpected particle type below object"
 
 
-    def undropped_exist(self):
+    def _undropped_exist(self):
         """ checks column for any rocks that haven't fully fallen """
         column = self.cells
         for position, obj in enumerate(column):
@@ -115,7 +120,10 @@ class Column():
 
 class Simulator():
     """ Applies gravity to the particle field """
-    def simulate(self, input_field):
+    @staticmethod
+    def simulate(input_field):
+        """ processes the raw input particle field into a fully simulated field
+        (i.e. all rocks have fallen) """
         def _initialize_columns():
             columns = []
             for _ in range(width):
@@ -151,7 +159,9 @@ class Simulator():
 
 class Writer():
     """ Writes fully simulated (gravity applied) field as strings to STDOUT """
-    def write(self, field):
+    @staticmethod
+    def write(field):
+        """ prints the fully simulated particle field to STDOUT """
         width = len(field[0].cells)
         height = len(field)
         rows = [[[] for x in range(height)] for y in range(width)]
@@ -167,6 +177,7 @@ class Writer():
         return output
 
 def main():
+    """ end-to-end program: reads, simulates, and writes a particle field """
     reader = Reader()
     unsimulated_field = reader.read()
 

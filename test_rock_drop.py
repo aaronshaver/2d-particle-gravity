@@ -75,3 +75,15 @@ class Case(unittest.TestCase):
         test_output = self.read_test_output('4x4_tables_singles')
         simulated = self.simulator.simulate(test_input)
         self.assertEqual(self.writer.write(simulated), test_output)
+    
+    def test_4x4_stacks(self):
+        test_input = self.read_test_input('4x4_stacks')
+        test_output = self.read_test_output('4x4_stacks')
+        simulated = self.simulator.simulate(test_input)
+        self.assertEqual(self.writer.write(simulated), test_output)
+
+    def test_30x30(self):
+        test_input = self.read_test_input('30x30')
+        test_output = self.read_test_output('30x30')
+        simulated = self.simulator.simulate(test_input)
+        self.assertEqual(self.writer.write(simulated), test_output)
